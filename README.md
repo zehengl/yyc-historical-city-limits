@@ -18,12 +18,15 @@ A Python script that creates a video illustrating the historical changes in the 
     .venv\Scripts\activate
     python -m pip install -U pip
     pip install -r requirements.txt
+    python generate.py
 
 > Use `pip install -r requirements-dev.txt` for development.
 
 ## Credits
 
 - [Logo][1] by [Paomedia][2]
+- [Historic City Limits][3] of Calgary
 
 [1]: https://www.iconfinder.com/icons/299050/map_icon
 [2]: https://www.iconfinder.com/paomedia
+[3]: https://data.calgary.ca/Base-Maps/Historic-City-Limits/twfe-ukxx
