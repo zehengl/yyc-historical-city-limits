@@ -1,4 +1,6 @@
+folium==0.16.0
 pandas==2.2.1
-seaborn==0.13.2
+requests==2.31.0
+selenium==4.18.1
+shapely==2.0.3
 tqdm==4.66.2
-
