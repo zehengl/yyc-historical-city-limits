@@ -85,7 +85,7 @@ for y in tqdm(orthophoto_years + wmasp_years):
 
 # %%
 out = cv2.VideoWriter(
-    str(output / f"output.mp4"), cv2.VideoWriter_fourcc(*"mp4v"), 0.75, (size, size)
+    str(output / f"output.mp4"), cv2.VideoWriter_fourcc(*"mp4v"), 1, (size, size)
 )
 
 for filename in tqdm(output.glob("*.png")):
