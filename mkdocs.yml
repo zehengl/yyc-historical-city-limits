@@ -1,0 +1,59 @@
+site_name: yyc-historical-city-limits
+nav:
+  - Home: index.md
+theme:
+  name: material
+  favicon: https://cdn2.iconfinder.com/data/icons/round-varieties/60/Rounded_-_High_Ultra_Colour02_-_Maps-512.png
+  logo: https://cdn2.iconfinder.com/data/icons/round-varieties/60/Rounded_-_High_Ultra_Colour02_-_Maps-512.png
+  font:
+    text: Roboto
+  palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: red
+      accent: red
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: pink
+      accent: pink
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to light mode
+  features:
+    - header.autohide
+    - navigation.top
+    - navigation.tabs
+    - navigation.footer
+repo_name: yyc-historical-city-limits
+repo_url: https://github.com/zehengl/yyc-historical-city-limits
+plugins:
+  - search
+  - tags
+  - minify:
+      minify_html: true
+  - neoteroi.contribs:
+      contributors:
+        - email: imzehengl@gmail.com
+          image: https://avatars.githubusercontent.com/u/6238966?v=4
+markdown_extensions:
+  - def_list
+  - attr_list
+  - md_in_html
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/zehengl
+    - icon: fontawesome/brands/linkedin
+      link: https://linkedin.com/in/zehengl
+extra_css:
+  - css/neoteroi-mkdocs.css
