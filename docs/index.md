@@ -7,3 +7,5 @@
 A Python script that creates a video illustrating the historical changes in the city limits of Calgary
 
 ![](./output.gif)
+
+![](./output2.gif)
