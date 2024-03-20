@@ -105,3 +105,48 @@ for filename in tqdm(output.glob("*.png")):
 out.release()
 
 # %%
+for row in tqdm(df.to_dict("records")):
+    base_url = "https://tiles.arcgis.com/tiles/AVP60cs0Q9PEA8rH/arcgis/rest/services/CurrentOrthophoto_WMASP/MapServer/tile"
+    m = folium.Map(
+        location=(51.0447, -114.0719),
+        zoom_start=12,
+        tiles=base_url + "/{z}/{y}/{x}",
+        attr="The City of Calgary",
+        width=size,
+        height=size,
+        zoom_control=False,
+    )
+    year = row["start_year"]
+    poly = row["the_geom"]
+
+    folium.GeoJson(
+        poly,
+        style_function=lambda _: {"fillColor": "#000000", "color": "#c8102e"},
+    ).add_to(m)
+
+    img_data = m._to_png(5)
+    img = Image.open(io.BytesIO(img_data))
+    img.save(output / f"current-as-if-in-{year}.png")
+
+# %%
+out = cv2.VideoWriter(
+    str(output / f"output2.mp4"), cv2.VideoWriter_fourcc(*"mp4v"), 1, (size, size)
+)
+
+for filename in tqdm(output.glob("current-as-if-in-*.png")):
+    img = cv2.imread(str(filename))
+    img = cv2.putText(
+        img,
+        f'Calgary\'s city limit in {filename.stem.split("-")[-1]}',
+        (int(size * 0.05), int(size * 0.075)),
+        cv2.FONT_HERSHEY_COMPLEX,
+        2,
+        (46, 16, 200),
+        2,
+        cv2.LINE_AA,
+    )
+    out.write(img)
+
+out.release()
+
+# %%
