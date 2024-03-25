@@ -1,5 +1,6 @@
 # %%
 import io
+import subprocess
 from datetime import datetime
 from pathlib import Path
 
@@ -85,7 +86,7 @@ for y in tqdm(orthophoto_years + wmasp_years):
 
 # %%
 out = cv2.VideoWriter(
-    str(output / f"output.mp4"), cv2.VideoWriter_fourcc(*"mp4v"), 1, (size, size)
+    str(output / f"output1.mp4"), cv2.VideoWriter_fourcc(*"mp4v"), 1, (size, size)
 )
 
 for filename in tqdm(output.glob("*.png")):
@@ -148,5 +149,21 @@ for filename in tqdm(output.glob("current-as-if-in-*.png")):
     out.write(img)
 
 out.release()
+
+# %%
+for i in range(2):
+    try:
+        subprocess.call(
+            f"ffmpeg -y -i output/output{i+1}.mp4 -vf palettegen output/palette{i+1}.png".split()
+        )
+    except:
+        pass
+
+    try:
+        subprocess.call(
+            f"ffmpeg -y -i output/output{i+1}.mp4 -i output/palette{i+1}.png -filter_complex paletteuse -r 10 -s 640x640 output/output{i+1}.gif".split()
+        )
+    except:
+        pass
 
 # %%

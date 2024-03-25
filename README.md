@@ -20,8 +20,6 @@ A Python script that creates a video illustrating the historical changes in the 
     pip install -r requirements.txt
     python generate.py
     cd output
-    ffmpeg -y -i output.mp4 -vf palettegen palette.png
-    ffmpeg -y -i output.mp4 -i palette.png -filter_complex paletteuse -r 10 -s 640x640 output.gif
 
 > Use `pip install -r requirements-dev.txt` for development.
 
