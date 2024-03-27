@@ -19,7 +19,6 @@ A Python script that creates a video illustrating the historical changes in the 
     python -m pip install -U pip
     pip install -r requirements.txt
     python generate.py
-    cd output
 
 > Use `pip install -r requirements-dev.txt` for development.
 
