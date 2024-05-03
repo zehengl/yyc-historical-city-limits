@@ -5,6 +5,7 @@
 # yyc-historical-city-limits
 
 ![coding_style](https://img.shields.io/badge/code%20style-black-000000.svg)
+[![GitHub Pages](https://github.com/zehengl/yyc-historical-city-limits/actions/workflows/gh-deploy.yml/badge.svg)](https://github.com/zehengl/yyc-historical-city-limits/actions/workflows/gh-deploy.yml)
 
 A Python script that creates a video illustrating the historical changes in the city limits of Calgary
 
