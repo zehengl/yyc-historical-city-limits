@@ -1,4 +1,4 @@
-folium==0.17.0
+folium==0.18.0
 pandas==2.2.3
 requests==2.32.3
 selenium==4.25.0
