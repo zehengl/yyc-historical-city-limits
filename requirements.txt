@@ -1,6 +1,6 @@
-folium==0.19.5
+folium==0.19.6
 pandas==2.2.3
 requests==2.32.3
 selenium==4.32.0
-shapely==2.1.0
+shapely==2.1.1
 tqdm==4.67.1
