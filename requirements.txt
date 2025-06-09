@@ -1,5 +1,5 @@
-folium==0.19.6
-pandas==2.2.3
+folium==0.19.7
+pandas==2.3.0
 requests==2.32.3
 selenium==4.33.0
 shapely==2.1.1
