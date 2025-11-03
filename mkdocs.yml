@@ -3,8 +3,6 @@ nav:
   - Home: index.md
 theme:
   name: material
-  favicon: https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678074-map-512.png
-  logo: https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678074-map-512.png
   font:
     text: Roboto
   palette:
