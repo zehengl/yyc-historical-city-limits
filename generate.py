@@ -1,5 +1,7 @@
 # %%
 import io
+import re
+import shutil
 import subprocess
 from datetime import datetime
 from pathlib import Path
@@ -8,6 +10,7 @@ import cv2
 import folium
 import pandas as pd
 import requests
+from bs4 import BeautifulSoup
 from PIL import Image
 from shapely.geometry import shape
 from tqdm.auto import tqdm
@@ -26,43 +29,32 @@ df
 
 
 # %%
-orthophoto_years = [
-    2004,
-    2006,
-    2007,
-    2009,
-    2019,
-    2021,
-]
+services_url = "https://tiles.arcgis.com/tiles/AVP60cs0Q9PEA8rH/arcgis/rest/services"
+html_doc = requests.get(services_url).content
+soup = BeautifulSoup(html_doc, "html.parser")
 
-wmasp_years = [
-    1997,
-    1999,
-    2001,
-    2003,
-    2005,
-    2008,
-    2010,
-    2011,
-    2012,
-    2014,
-    2015,
-    2018,
-    2020,
-    2022,
-]
+items = soup.find_all("li")
+services_list = []
+for item in items:
+    name = item.find("a").text
+    # pattern_wmasp = re.compile(r"^Calgary_\d{4}_WMASP$")
+    pattern_orthophoto_web = re.compile(r"^Calgary_Orthophoto_Web_\d{4}$")
+    if pattern_orthophoto_web.match(name):
+        services_list.append(name)
+services_list = sorted(services_list)
+services_list
 
+# %%
 size = 2048
 
-for y in tqdm(orthophoto_years + wmasp_years):
-    if y in orthophoto_years:
-        base_url = f"https://tiles.arcgis.com/tiles/AVP60cs0Q9PEA8rH/arcgis/rest/services/Calgary_{y}_Orthophoto/MapServer/tile"
-    else:
-        base_url = f"https://tiles.arcgis.com/tiles/AVP60cs0Q9PEA8rH/arcgis/rest/services/Calgary_{y}_WMASP/MapServer/tile"
+for name in tqdm(services_list, desc="Downloading images"):
+    y = int(name.split("_")[-1])
+    tiles_url = f"{services_url}/{name}/MapServer/tile/{{z}}/{{y}}/{{x}}"
+
     m = folium.Map(
         location=(51.0447, -114.0719),
         zoom_start=12,
-        tiles=base_url + "/{z}/{y}/{x}",
+        tiles=tiles_url,
         attr="The City of Calgary",
         width=size,
         height=size,
@@ -80,20 +72,20 @@ for y in tqdm(orthophoto_years + wmasp_years):
         style_function=lambda _: {"fillColor": "#000000", "color": "#c8102e"},
     ).add_to(m)
 
-    img_data = m._to_png(5)
+    img_data = m._to_png(5, size=[size, size])
     img = Image.open(io.BytesIO(img_data))
-    img.save(output / f"{y}.png")
+    img.save(output / f"year-{y}.png")
 
 # %%
 out = cv2.VideoWriter(
     str(output / f"output1.mp4"), cv2.VideoWriter_fourcc(*"mp4v"), 1, (size, size)
 )
 
-for filename in tqdm(output.glob("*.png")):
+for filename in tqdm(sorted(output.glob("year-*.png")), desc="Adding frames"):
     img = cv2.imread(str(filename))
     img = cv2.putText(
         img,
-        filename.stem,
+        filename.stem.replace("-", " ").capitalize(),
         (int(size * 0.4), int(size * 0.35)),
         cv2.FONT_HERSHEY_COMPLEX,
         2,
@@ -107,15 +99,17 @@ out.release()
 
 # %%
 for row in tqdm(df.to_dict("records")):
-    base_url = "https://tiles.arcgis.com/tiles/AVP60cs0Q9PEA8rH/arcgis/rest/services/CurrentOrthophoto_WMASP/MapServer/tile"
+    tiles_url = (
+        f"{services_url}/CurrentOrthophoto_WMASP/MapServer/tile/{{z}}/{{y}}/{{x}}"
+    )
     m = folium.Map(
         location=(51.0447, -114.0719),
         zoom_start=12,
-        tiles=base_url + "/{z}/{y}/{x}",
+        zoom_control=False,
+        tiles=tiles_url,
         attr="The City of Calgary",
         width=size,
         height=size,
-        zoom_control=False,
     )
     year = row["start_year"]
     poly = row["the_geom"]
@@ -125,7 +119,7 @@ for row in tqdm(df.to_dict("records")):
         style_function=lambda _: {"fillColor": "#000000", "color": "#c8102e"},
     ).add_to(m)
 
-    img_data = m._to_png(5)
+    img_data = m._to_png(5, size=[size, size])
     img = Image.open(io.BytesIO(img_data))
     img.save(output / f"current-as-if-in-{year}.png")
 
@@ -134,12 +128,14 @@ out = cv2.VideoWriter(
     str(output / f"output2.mp4"), cv2.VideoWriter_fourcc(*"mp4v"), 1, (size, size)
 )
 
-for filename in tqdm(output.glob("current-as-if-in-*.png")):
+for filename in tqdm(
+    sorted(output.glob("current-as-if-in-*.png")), desc="Adding frames"
+):
     img = cv2.imread(str(filename))
     img = cv2.putText(
         img,
         f'Calgary\'s city limit in {filename.stem.split("-")[-1]}',
-        (int(size * 0.05), int(size * 0.075)),
+        (int(size * 0.25), int(size * 0.075)),
         cv2.FONT_HERSHEY_COMPLEX,
         2,
         (46, 16, 200),
@@ -165,5 +161,9 @@ for i in range(2):
         )
     except:
         pass
+
+# %%
+for i in range(2):
+    shutil.copy(output / f"output{i+1}.gif", "docs")
 
 # %%
