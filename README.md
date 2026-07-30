@@ -22,6 +22,7 @@ A Python script that creates a video illustrating the historical changes in the 
 
 ## Credits
 
+- City of Calgary AcrGIS [Services Directory](https://tiles.arcgis.com/tiles/AVP60cs0Q9PEA8rH/arcgis/rest/services)
 - [Historic City Limits][3] of Calgary
 - [Reduce Generated GIF Size Using FFMPEG][4]
 
