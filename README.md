@@ -7,7 +7,8 @@ A Python script that creates a video illustrating the historical changes in the 
 
 ## Environment
 
-- Python 3.9
+- Python 3.12
+- FFmpeg
 
 ## Getting Started
 
