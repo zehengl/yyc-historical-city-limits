@@ -81,7 +81,10 @@ out = cv2.VideoWriter(
     str(output / f"output1.mp4"), cv2.VideoWriter_fourcc(*"mp4v"), 1, (size, size)
 )
 
-for filename in tqdm(sorted(output.glob("year-*.png")), desc="Adding frames"):
+for filename in tqdm(
+    sorted(output.glob("year-*.png")),
+    desc="Adding frames for output1",
+):
     img = cv2.imread(str(filename))
     img = cv2.putText(
         img,
@@ -98,7 +101,7 @@ for filename in tqdm(sorted(output.glob("year-*.png")), desc="Adding frames"):
 out.release()
 
 # %%
-for row in tqdm(df.to_dict("records")):
+for row in tqdm(df.to_dict("records"), desc="Making images"):
     tiles_url = (
         f"{services_url}/CurrentOrthophoto_WMASP/MapServer/tile/{{z}}/{{y}}/{{x}}"
     )
@@ -129,7 +132,8 @@ out = cv2.VideoWriter(
 )
 
 for filename in tqdm(
-    sorted(output.glob("current-as-if-in-*.png")), desc="Adding frames"
+    sorted(output.glob("current-as-if-in-*.png")),
+    desc="Adding frames or output2",
 ):
     img = cv2.imread(str(filename))
     img = cv2.putText(
